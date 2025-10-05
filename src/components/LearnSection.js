@@ -269,9 +269,9 @@ const LearnSection = () => {
         {letter.commonWords.length > 0 && (
           <div className="korean-words-section">
             <h4>🇰🇷 Korean Examples</h4>
-            <p className="korean-subtitle">Common Korean words using this letter (click to hear pronunciation):</p>
+            <p className="korean-subtitle">Common Korean words starting with this letter (click to hear pronunciation):</p>
             <div className="korean-words">
-              {letter.commonWords.map((wordWithTranslation, index) => {
+              {letter.commonWords.slice(0, 6).map((wordWithTranslation, index) => {
                 // Split word and translation (format: "word (translation)")
                 const match = wordWithTranslation.match(/^(.+?)\s*\((.+)\)$/);
                 if (match) {
