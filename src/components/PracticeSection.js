@@ -278,7 +278,7 @@ const PracticeSection = () => {
         });
       }
 
-      // Provide helpful user feedback based on character type
+      // Enhanced fallback using example words
       const isVowel = letter?.category === 'vowel';
       const charName = letter?.koreanLetter || 'unknown character';
 
@@ -291,6 +291,20 @@ const PracticeSection = () => {
           return;
         } catch (englishError) {
           console.error('English fallback also failed:', englishError);
+        }
+      }
+
+      // Try using example words if available
+      if (letter?.exampleWords && letter.exampleWords.length > 0) {
+        console.log('Attempting to use example words for fallback');
+        for (const exampleWord of letter.exampleWords.slice(0, 2)) { // Try first 2 examples
+          try {
+            await speakKorean(exampleWord, { rate: 0.7 });
+            console.log(`Successfully played example word: ${exampleWord}`);
+            return;
+          } catch (wordError) {
+            console.error(`Example word "${exampleWord}" also failed:`, wordError);
+          }
         }
       }
 
@@ -333,30 +347,33 @@ const PracticeSection = () => {
                 <button
                   onClick={() => debugKoreanCharacter('ㅑ')}
                   style={{
-                    backgroundColor: '#ffc107',
-                    color: '#212529',
+                    backgroundColor: '#dc3545',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     padding: '0.25rem 0.5rem',
                     fontSize: '0.8rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
                   }}
+                  title="This character has known issues - testing enhanced fallback system"
                 >
-                  Test ㅑ (ya)
+                  🚨 Test ㅑ (ya) - Problematic
                 </button>
                 <button
                   onClick={() => debugKoreanCharacter('ㄱ')}
                   style={{
-                    backgroundColor: '#ffc107',
-                    color: '#212529',
+                    backgroundColor: '#28a745',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     padding: '0.25rem 0.5rem',
                     fontSize: '0.8rem',
                     cursor: 'pointer'
                   }}
+                  title="This character usually works well"
                 >
-                  Test ㄱ (g/k)
+                  ✅ Test ㄱ (g/k) - Working
                 </button>
                 <button
                   onClick={() => debugKoreanCharacter('ㅏ')}
