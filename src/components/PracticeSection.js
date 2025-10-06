@@ -58,11 +58,29 @@ const PracticeSection = () => {
     console.log('Character:', character);
     console.log('Unicode code point:', character.charCodeAt(0).toString(16));
 
+    // Test the character directly
     try {
+      console.log('Testing character directly...');
       await testKoreanCharacter(character);
       console.log('✅ Successfully played character');
     } catch (error) {
       console.error('❌ Failed to play character:', error);
+
+      // Try to find a letter object with this character for better fallback testing
+      const testLetter = {
+        koreanLetter: character,
+        name: `Test ${character}`,
+        englishSound: character === 'ㅑ' ? 'yah' : 'test',
+        exampleWords: character === 'ㅑ' ? ['yacht', 'yard'] : ['test']
+      };
+
+      console.log('Testing with letter object fallback...');
+      try {
+        await playLetterSound(testLetter);
+        console.log('✅ Successfully played character with fallback');
+      } catch (fallbackError) {
+        console.error('❌ Fallback also failed:', fallbackError);
+      }
     }
   };
 
