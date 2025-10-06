@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useProgress } from '../context/ProgressContext';
-import { playLetterSound, preloadVoices, testKoreanCharacter } from '../utils/audioUtils';
+import { playLetterSound, preloadVoices, testKoreanCharacter, speakKorean, getKoreanCharacterSupport } from '../utils/audioUtils';
 
 // Exercise configuration with multiple question patterns
 const EXERCISE_TYPES = {
@@ -278,8 +278,32 @@ const PracticeSection = () => {
         });
       }
 
-      // Try to show user-friendly error message or fallback
-      alert(`Unable to play sound for "${letter?.koreanLetter}" (${letter?.name}). This might be due to browser limitations with Korean character pronunciation. Try using a different browser or check if Korean language support is installed.`);
+      // Provide helpful user feedback based on character type
+      const isVowel = letter?.category === 'vowel';
+      const charName = letter?.koreanLetter || 'unknown character';
+
+      if (isVowel && letter?.englishSound) {
+        // For vowels, we can try to speak the English sound description
+        console.log('Attempting to speak English sound description as fallback');
+        try {
+          await speakKorean(letter.englishSound, { rate: 0.8 });
+          console.log('Successfully played English sound description');
+          return;
+        } catch (englishError) {
+          console.error('English fallback also failed:', englishError);
+        }
+      }
+
+      // Show comprehensive user-friendly error message
+      const message = `Unable to play pronunciation for "${charName}" (${letter?.name || 'unknown'}).\n\n` +
+        `Troubleshooting steps:\n` +
+        `1. Try a different browser (Chrome often works best for Korean)\n` +
+        `2. Check if Korean language support is installed in your OS\n` +
+        `3. The sound "${letter?.englishSound || 'N/A'}" can help you learn the pronunciation\n` +
+        `4. This is a known limitation with some Korean characters in certain browsers\n\n` +
+        `Technical details have been logged to the browser console for debugging.`;
+
+      alert(message);
     } finally {
       setIsPlaying(false);
     }
@@ -401,11 +425,11 @@ const PracticeSection = () => {
                 <div className="letter-with-sound">
                   <span className="korean-letter-large">{currentQuestion.letter.koreanLetter}</span>
                   <button
-                    className={`letter-sound-btn ${isPlaying ? 'playing' : ''}`}
+                    className={`letter-sound-btn ${isPlaying ? 'playing' : ''} ${getKoreanCharacterSupport(currentQuestion.letter.koreanLetter).support === 'limited' ? 'limited-support' : ''}`}
                     onClick={() => handlePlayLetterSound(currentQuestion.letter)}
                     disabled={isPlaying}
                     aria-label={`Play sound for ${currentQuestion.letter.name}`}
-                    title={`Hear pronunciation of ${currentQuestion.letter.name}`}
+                    title={`${getKoreanCharacterSupport(currentQuestion.letter.koreanLetter).support === 'limited' ? 'Limited browser support - ' : ''}Hear pronunciation of ${currentQuestion.letter.name}`}
                   >
                     🔊
                   </button>

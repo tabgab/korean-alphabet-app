@@ -6,6 +6,108 @@
 // Audio cache to avoid reloading sounds
 const audioCache = new Map();
 
+// Korean character compatibility database
+// Some Korean characters have poor browser support, so we provide alternatives
+const koreanCharacterSupport = {
+  // Problematic characters that need special handling
+  'ㅑ': {
+    primary: 'ㅑ',
+    fallbacks: ['ya', 'yah', '야'], // Romanization and full syllable fallbacks
+    support: 'limited' // Known to have issues in many browsers
+  },
+  'ㅛ': {
+    primary: 'ㅛ',
+    fallbacks: ['yo', 'yoh', '요'],
+    support: 'limited'
+  },
+  'ㅠ': {
+    primary: 'ㅠ',
+    fallbacks: ['yu', 'yoo', '유'],
+    support: 'limited'
+  },
+  'ㅖ': {
+    primary: 'ㅖ',
+    fallbacks: ['ye', 'yeh', '예'],
+    support: 'limited'
+  },
+  'ㅘ': {
+    primary: 'ㅘ',
+    fallbacks: ['wa', 'wah', '와'],
+    support: 'limited'
+  },
+  'ㅚ': {
+    primary: 'ㅚ',
+    fallbacks: ['we', 'weh', '외'],
+    support: 'limited'
+  },
+  'ㅝ': {
+    primary: 'ㅝ',
+    fallbacks: ['wo', 'wah', '워'],
+    support: 'limited'
+  },
+  'ㅟ': {
+    primary: 'ㅟ',
+    fallbacks: ['wi', 'wee', '위'],
+    support: 'limited'
+  },
+  'ㅢ': {
+    primary: 'ㅢ',
+    fallbacks: ['ui', 'ee', '의'],
+    support: 'limited'
+  },
+
+  // Additional characters that might need fallbacks
+  'ㄸ': {
+    primary: 'ㄸ',
+    fallbacks: ['tt', 'dd', '따'],
+    support: 'limited'
+  },
+  'ㅃ': {
+    primary: 'ㅃ',
+    fallbacks: ['pp', 'bb', '빠'],
+    support: 'limited'
+  },
+  'ㅉ': {
+    primary: 'ㅉ',
+    fallbacks: ['jj', 'zz', '짜'],
+    support: 'limited'
+  },
+  'ㄲ': {
+    primary: 'ㄲ',
+    fallbacks: ['kk', 'gg', '까'],
+    support: 'limited'
+  },
+  'ㅆ': {
+    primary: 'ㅆ',
+    fallbacks: ['ss', '싸'],
+    support: 'limited'
+  },
+  'ㄹ': {
+    primary: 'ㄹ',
+    fallbacks: ['r', 'l', '라'],
+    support: 'limited'
+  }
+};
+
+// Build comprehensive database from koreanAlphabetData
+export const buildKoreanCharacterDatabase = () => {
+  const database = {};
+
+  // This would be populated from the actual alphabet data
+  // For now, we'll use the manual database above
+
+  return database;
+};
+
+// Check if a Korean character needs special handling
+export const getKoreanCharacterSupport = (character) => {
+  return koreanCharacterSupport[character] || {
+    primary: character,
+    fallbacks: [],
+    support: 'good'
+  };
+};
+
 // Check if browser supports speech synthesis
 export const isSpeechSupported = () => {
   return 'speechSynthesis' in window;
@@ -121,7 +223,7 @@ const fallbackToEnglish = (text, options) => {
   });
 };
 
-// Play individual letter sound
+// Play individual letter sound with enhanced Korean support
 export const playLetterSound = async (letter) => {
   if (!letter || !letter.koreanLetter) {
     console.warn('Invalid letter provided for audio playback');
@@ -129,6 +231,14 @@ export const playLetterSound = async (letter) => {
   }
 
   console.log('Playing letter sound for:', letter.koreanLetter, 'Name:', letter.name);
+
+  const charSupport = getKoreanCharacterSupport(letter.koreanLetter);
+
+  // Try different approaches based on character support level
+  if (charSupport.support === 'limited') {
+    console.log(`Character ${letter.koreanLetter} has limited support, using fallback methods`);
+    return playLetterSoundWithFallback(letter, charSupport);
+  }
 
   // For single letters, repeat them for clarity
   const textToSpeak = letter.koreanLetter.repeat(2);
@@ -145,22 +255,49 @@ export const playLetterSound = async (letter) => {
   } catch (error) {
     console.error(`Error playing letter ${letter.name}:`, error);
 
-    // Try fallback with romanization
-    if (letter.romanization) {
-      console.log(`Attempting fallback with romanization: ${letter.romanization}`);
-      try {
-        await speakKorean(letter.romanization, {
-          rate: 0.5,
-          onStart: () => {
-            console.log(`Playing romanization fallback for letter: ${letter.name} (${letter.romanization})`);
-          }
-        });
-      } catch (fallbackError) {
-        console.error(`Fallback also failed for letter ${letter.name}:`, fallbackError);
-        throw fallbackError;
+    // Try fallback methods
+    return playLetterSoundWithFallback(letter, charSupport);
+  }
+};
+
+// Enhanced fallback system for problematic Korean characters
+const playLetterSoundWithFallback = async (letter, charSupport) => {
+  const attempts = [
+    // Try primary Korean character with different settings
+    { text: letter.koreanLetter.repeat(3), lang: 'ko-KR', rate: 0.3 },
+
+    // Try romanization if available
+    ...(letter.romanization ? [{ text: letter.romanization, lang: 'en-US', rate: 0.6 }] : []),
+
+    // Try fallback pronunciations from database
+    ...charSupport.fallbacks.map(fallback => ({
+      text: fallback,
+      lang: fallback.length === 1 ? 'ko-KR' : 'en-US',
+      rate: 0.6
+    })),
+
+    // Try with English description
+    ...(letter.englishSound ? [{ text: letter.englishSound, lang: 'en-US', rate: 0.7 }] : [])
+  ];
+
+  for (let i = 0; i < attempts.length; i++) {
+    const attempt = attempts[i];
+    console.log(`Attempting fallback ${i + 1}/${attempts.length}: "${attempt.text}" with lang: ${attempt.lang}`);
+
+    try {
+      await speakKorean(attempt.text, {
+        rate: attempt.rate,
+        pitch: 1.1,
+        onStart: () => {
+          console.log(`Fallback successful for letter: ${letter.name} using "${attempt.text}"`);
+        }
+      });
+      return; // Success, exit the function
+    } catch (error) {
+      console.log(`Fallback attempt ${i + 1} failed:`, error);
+      if (i === attempts.length - 1) {
+        throw new Error(`All fallback attempts failed for Korean character: ${letter.koreanLetter}`);
       }
-    } else {
-      throw error;
     }
   }
 };
