@@ -623,3 +623,112 @@ export const createSyllable = (consonant, vowel) => {
   if (!consonant || !vowel) return '';
   return consonant.koreanLetter + vowel.koreanLetter;
 };
+
+// Example words for syllable assembly practice
+export const exampleWords = [
+  {
+    id: 1,
+    korean: '가다',
+    romanization: 'gada',
+    english: 'to go',
+    syllables: [
+      {
+        syllable: '가',
+        consonant: 'ㄱ',
+        vowel: 'ㅏ',
+        structure: 'CV'
+      },
+      {
+        syllable: '다',
+        consonant: 'ㄷ',
+        vowel: 'ㅏ',
+        structure: 'CV'
+      }
+    ]
+  },
+  {
+    id: 2,
+    korean: '사랑',
+    romanization: 'sarang',
+    english: 'love',
+    syllables: [
+      {
+        syllable: '사',
+        consonant: 'ㅅ',
+        vowel: 'ㅏ',
+        structure: 'CV'
+      },
+      {
+        syllable: '랑',
+        consonant: 'ㄹ',
+        vowel: 'ㅏ',
+        final: 'ㅇ',
+        structure: 'CVC'
+      }
+    ]
+  },
+  {
+    id: 3,
+    korean: '학교',
+    romanization: 'hakgyo',
+    english: 'school',
+    syllables: [
+      {
+        syllable: '학',
+        consonant: 'ㅎ',
+        vowel: 'ㅏ',
+        final: 'ㄱ',
+        structure: 'CVC'
+      },
+      {
+        syllable: '교',
+        consonant: 'ㄱ',
+        vowel: 'ㅛ',
+        structure: 'CV'
+      }
+    ]
+  },
+  {
+    id: 4,
+    korean: '사람',
+    romanization: 'saram',
+    english: 'person',
+    syllables: [
+      {
+        syllable: '사',
+        consonant: 'ㅅ',
+        vowel: 'ㅏ',
+        structure: 'CV'
+      },
+      {
+        syllable: '람',
+        consonant: 'ㄹ',
+        vowel: 'ㅏ',
+        final: 'ㅁ',
+        structure: 'CVC'
+      }
+    ]
+  },
+  {
+    id: 5,
+    korean: '한국',
+    romanization: 'hanguk',
+    english: 'Korea',
+    syllables: [
+      {
+        syllable: '한',
+        consonant: 'ㅎ',
+        vowel: 'ㅏ',
+        final: 'ㄴ',
+        structure: 'CVC'
+      },
+      {
+        syllable: '국',
+        consonant: 'ㄱ',
+        vowel: 'ㅜ',
+        final: 'ㄱ',
+        structure: 'CVC'
+      }
+    ]
+  }
+];

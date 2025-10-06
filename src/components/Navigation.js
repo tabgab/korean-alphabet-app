@@ -15,6 +15,12 @@ const Navigation = ({ currentSection, setCurrentSection }) => {
       ariaLabel: 'Practice exercises for Korean letters'
     },
     {
+      id: 'wordbuilder',
+      label: 'Word Builder',
+      icon: '🔧',
+      ariaLabel: 'Build Korean words from syllable blocks'
+    },
+    {
       id: 'progress',
       label: 'Progress',
       icon: '📊',

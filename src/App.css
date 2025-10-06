@@ -1569,3 +1569,1219 @@ button {
 .print-icon {
   font-size: 1.1rem;
 }
+
+/* Word Builder Section Styles */
+.word-selection {
+  padding: 2rem 0;
+}
+
+.word-selection h3 {
+  font-size: 1.3rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.word-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.word-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.word-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.word-korean {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.word-romanization {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  font-family: 'Courier New', monospace;
+}
+
+.word-english {
+  color: #475569;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.syllable-count {
+  font-size: 0.8rem;
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.word-builder-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.back-btn {
+  background-color: #6b7280;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #4b5563;
+}
+
+.word-info {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.target-word {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  margin-right: 1rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.romanization {
+  font-size: 1.3rem;
+  color: #64748b;
+  font-family: 'Courier New', monospace;
+}
+
+.target-area, .syllable-pool {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.target-area h3, .syllable-pool h3 {
+  font-size: 1.2rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.syllable-slots {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.syllable-slot {
+  min-width: 120px;
+  height: 80px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.syllable-slot:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.syllable-in-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.syllable-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.remove-syllable {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.remove-syllable:hover {
+  background-color: #fee2e2;
+}
+
+.empty-slot {
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.syllables-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.syllable-btn {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  text-align: center;
+}
+
+.syllable-btn.available {
+  cursor: grab;
+}
+
+.syllable-btn.used {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f1f5f9;
+}
+
+.syllable-btn:hover.available {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.syllable-display {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.syllable-info {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.jamo-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.jamo {
+  color: #059669;
+  font-weight: 600;
+}
+
+.jamo.final {
+  color: #dc2626;
+}
+
+.structure {
+  font-family: 'Courier New', monospace;
+  background-color: #f1f5f9;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.builder-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.check-btn, .reset-btn, .next-word-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.check-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.check-btn:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.reset-btn {
+  background-color: #6b7280;
+  color: white;
+}
+
+.reset-btn:hover {
+  background-color: #4b5563;
+}
+
+.next-word-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.next-word-btn:hover {
+  background-color: #2563eb;
+}
+
+.result-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.result-section.correct {
+  border-left: 4px solid #10b981;
+}
+
+.result-section.incorrect {
+  border-left: 4px solid #ef4444;
+}
+
+.feedback {
+  margin-bottom: 2rem;
+}
+
+.feedback h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.feedback.correct h3 {
+  color: #059669;
+}
+
+.feedback.incorrect h3 {
+  color: #dc2626;
+}
+
+.feedback p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.syllable-explanation {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.syllable-explanation h4 {
+  font-size: 1.2rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.explanation-syllables {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.explanation-syllable {
+  text-align: center;
+}
+
+.explanation-syllable .syllable-main {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.explanation-syllable .syllable-details {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.explanation-syllable .jamo-breakdown {
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+/* Enhanced Word Builder Styles */
+
+/* Stage Progress Indicator */
+.stage-progress {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.stage.completed {
+  background-color: #d1fae5;
+  border: 2px solid #10b981;
+}
+
+.stage.active {
+  background-color: #dbeafe;
+  border: 2px solid #3b82f6;
+}
+
+.stage:not(.active):not(.completed) {
+  background-color: #f3f4f6;
+  border: 2px solid #d1d5db;
+}
+
+.stage-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.stage.completed .stage-number {
+  background-color: #10b981;
+  color: white;
+}
+
+.stage.active .stage-number {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.stage:not(.active):not(.completed) .stage-number {
+  background-color: #9ca3af;
+  color: white;
+}
+
+.stage-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Stage Container */
+.stage-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stage-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.stage-header h3 {
+  font-size: 1.4rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.stage-header p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* Jamo Selection Stage */
+.jamo-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.jamo-section h4 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.jamo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.jamo-btn {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.jamo-btn.available:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.jamo-btn.selected {
+  border-color: #7c3aed;
+  background-color: #f3e8ff;
+}
+
+.jamo-letter {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #7c3aed;
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.jamo-name {
+  font-size: 0.9rem;
+  color: #1e293b;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.jamo-sound {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-family: 'Courier New', monospace;
+}
+
+/* Syllable Building Stage */
+.syllable-building {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.jamo-pool-stage2 {
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.jamo-pool-stage2 h4 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.jamo-pool-stage2 p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.jamo-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.jamo-pool-grid button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.jamo-pool-grid button:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.jamo-pool-grid button.selected {
+  border-color: #7c3aed;
+  background-color: #f3e8ff;
+}
+
+.jamo-workspace, .built-syllables {
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.jamo-workspace h4, .built-syllables h4 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.selected-jamo {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.selected-jamo-item {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.selected-jamo-item.consonant {
+  background-color: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fbbf24;
+}
+
+.selected-jamo-item.vowel {
+  background-color: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #4ade80;
+}
+
+.build-syllable-btn {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.build-syllable-btn:hover:not(:disabled) {
+  background-color: #6d28d9;
+}
+
+.build-syllable-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.syllables-display {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.built-syllable {
+  padding: 1rem;
+  background: white;
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.built-syllable .syllable-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.built-syllable .syllable-components {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.built-syllable .syllable-structure {
+  font-size: 0.7rem;
+  color: #10b981;
+  font-family: 'Courier New', monospace;
+  background-color: #d1fae5;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Word Building Stage */
+.word-building {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.target-word-area, .available-syllables {
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.target-word-area h4, .available-syllables h4 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.word-slots {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.word-slot {
+  min-width: 100px;
+  height: 80px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.word-slot:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.syllable-in-word {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.syllable-in-word .syllable-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.empty-word-slot {
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.current-word {
+  font-size: 1.1rem;
+  color: #1e293b;
+  text-align: center;
+}
+
+.current-word-display {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #7c3aed;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.syllables-pool {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.syllable-btn {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.syllable-btn.available {
+  cursor: grab;
+}
+
+.syllable-btn.used {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f1f5f9;
+}
+
+.syllable-btn:hover.available {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.syllable-btn .syllable-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #7c3aed;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+/* Stage Controls and Navigation */
+.stage-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.hint-btn {
+  background-color: #fbbf24;
+  color: #1e293b;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hint-btn:hover:not(:disabled) {
+  background-color: #f59e0b;
+}
+
+.hint-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.stage-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.prev-stage-btn, .next-stage-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prev-stage-btn {
+  background-color: #6b7280;
+  color: white;
+}
+
+.prev-stage-btn:hover {
+  background-color: #4b5563;
+}
+
+.next-stage-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.next-stage-btn:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.next-stage-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.check-word-btn {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.check-word-btn:hover {
+  background-color: #6d28d9;
+}
+
+/* Hint Section */
+.hint-section {
+  background-color: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.hint-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hint-icon {
+  font-size: 1.2rem;
+}
+
+.hint-text {
+  flex: 1;
+  color: #92400e;
+  font-size: 0.95rem;
+}
+
+.close-hint {
+  background: none;
+  border: none;
+  color: #92400e;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Success States */
+.word-slot.correct {
+  border-color: #10b981;
+  background-color: #d1fae5;
+}
+
+.syllable-in-word.correct {
+  color: #059669;
+}
+
+.word-slot.correct .syllable-text {
+  color: #059669;
+}
+
+.success-message {
+  background-color: #d1fae5;
+  border: 1px solid #10b981;
+  color: #059669;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Exercise Controls */
+.exercise-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reset-btn, .new-word-btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.reset-btn:hover {
+  background-color: #dc2626;
+}
+
+.new-word-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.new-word-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Responsive adjustments for Enhanced Word Builder */
+@media (max-width: 768px) {
+  .word-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-progress {
+    gap: 1rem;
+  }
+
+  .stage {
+    min-width: 80px;
+    padding: 0.75rem;
+  }
+
+  .jamo-selection {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .syllable-building {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .jamo-pool-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .word-building {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .word-slots {
+    justify-content: center;
+  }
+
+  .word-slot {
+    min-width: 80px;
+    height: 60px;
+  }
+
+  .jamo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .syllables-pool {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .target-word {
+    font-size: 2rem;
+  }
+
+  .current-word-display {
+    font-size: 1.5rem;
+  }
+}
+
+/* Additional Word Builder Styles */
+.next-syllable-hint {
+  font-size: 0.9rem;
+  color: #3b82f6;
+  background-color: #eff6ff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  text-align: center;
+  border: 1px solid #3b82f6;
+}
+
+.clear-selection-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: all 0.2s ease;
+}
+
+.clear-selection-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Syllable Preview */
+.syllable-preview {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background-color: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 6px;
+}
+
+.preview-syllable {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.preview-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #7c3aed;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans CJK KR', sans-serif;
+}
+
+.preview-structure {
+  font-size: 0.8rem;
+  color: #0ea5e9;
+  font-family: 'Courier New', monospace;
+  background-color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #0ea5e9;
+}
+
+.selected-jamo-item.final-consonant {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.selection-summary {
+  margin-top: 1rem;
+}
+
+.structure-info {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.structure-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.structure-badge.cv {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
+
+.structure-badge.cvc {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.position-indicator {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.position-indicator.initial {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.position-indicator.final {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.usage-count {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  color: #6b7280;
+}
+
+.jamo-pool-stage2 {
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.jamo-pool-stage2 h4 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.jamo-pool-stage2 p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.jamo-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+.workspace-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}

@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Navigation from './components/Navigation';
 import LearnSection from './components/LearnSection';
 import PracticeSection from './components/PracticeSection';
+import WordBuilderSection from './components/WordBuilderSection';
 import ProgressSection from './components/ProgressSection';
 import CheatSheetSection from './components/CheatSheetSection';
 import { ProgressProvider } from './context/ProgressContext';
@@ -19,6 +20,8 @@ function App() {
         return <LearnSection />;
       case 'practice':
         return <PracticeSection />;
+      case 'wordbuilder':
+        return <WordBuilderSection />;
       case 'progress':
         return <ProgressSection />;
       case 'cheatsheet':
