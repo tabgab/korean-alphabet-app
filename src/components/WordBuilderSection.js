@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { exampleWords, koreanConsonants, koreanVowels } from '../koreanAlphabetData';
+import { playSyllableSound, playWordSound, preloadVoices } from '../utils/audioUtils';
 
 const WordBuilderSection = () => {
   const [selectedWord, setSelectedWord] = useState(null);
@@ -12,6 +13,39 @@ const WordBuilderSection = () => {
   const [userWord, setUserWord] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [currentHint, setCurrentHint] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Preload voices when component mounts
+  useEffect(() => {
+    preloadVoices();
+  }, []);
+
+  // Audio playback handlers
+  const handlePlaySyllableSound = async (syllable) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    try {
+      await playSyllableSound(syllable);
+    } catch (error) {
+      console.error('Error playing syllable sound:', error);
+    } finally {
+      setIsPlaying(false);
+    }
+  };
+
+  const handlePlayWordSound = async (word) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    try {
+      await playWordSound(word);
+    } catch (error) {
+      console.error('Error playing word sound:', error);
+    } finally {
+      setIsPlaying(false);
+    }
+  };
 
   const selectWord = useCallback((word) => {
     setSelectedWord(word);
@@ -401,6 +435,33 @@ const WordBuilderSection = () => {
     return `syllable-btn ${isUsed ? 'used' : 'available'}`;
   };
 
+  const renderSyllableWithSound = (syllable, index) => {
+    const isUsed = userWord.some(userSyl => userSyl.syllable === syllable.syllable);
+    return (
+      <div key={index} className="syllable-container">
+        <button
+          className={`syllable-btn ${isUsed ? 'used' : 'available'}`}
+          onClick={() => handleSyllableDrop(syllable)}
+          disabled={isUsed}
+        >
+          {syllable.syllable}
+        </button>
+        <button
+          className={`syllable-sound-btn ${isPlaying ? 'playing' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePlaySyllableSound(syllable);
+          }}
+          disabled={isPlaying}
+          aria-label={`Play sound for syllable ${syllable.syllable}`}
+          title={`Hear pronunciation of "${syllable.syllable}"`}
+        >
+          🔊
+        </button>
+      </div>
+    );
+  };
+
 
   if (!selectedWord) {
     return (
@@ -423,6 +484,18 @@ const WordBuilderSection = () => {
                 <div className="word-romanization">{word.romanization}</div>
                 <div className="word-english">"{word.english}"</div>
                 <div className="syllable-count">{word.syllables.length} syllables</div>
+                <button
+                  className={`word-sound-btn ${isPlaying ? 'playing' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlayWordSound(word);
+                  }}
+                  disabled={isPlaying}
+                  aria-label={`Play pronunciation for ${word.english}`}
+                  title={`Hear how to pronounce "${word.english}" in Korean`}
+                >
+                  🔊
+                </button>
               </button>
             ))}
           </div>
@@ -442,6 +515,15 @@ const WordBuilderSection = () => {
           <div className="word-info">
             <span className="target-word">{selectedWord.korean}</span>
             <span className="romanization">({selectedWord.romanization})</span>
+            <button
+              className={`word-sound-btn ${isPlaying ? 'playing' : ''}`}
+              onClick={() => handlePlayWordSound(selectedWord)}
+              disabled={isPlaying}
+              aria-label={`Play pronunciation for ${selectedWord.english}`}
+              title={`Hear how to pronounce "${selectedWord.english}"`}
+            >
+              🔊
+            </button>
           </div>
         </div>
 
@@ -652,7 +734,18 @@ const WordBuilderSection = () => {
                 <div className="syllables-display">
                   {builtSyllables.map((syllable, index) => (
                     <div key={index} className="built-syllable">
-                      <span className="syllable-text">{syllable.syllable}</span>
+                      <div className="syllable-header">
+                        <span className="syllable-text">{syllable.syllable}</span>
+                        <button
+                          className={`syllable-sound-btn ${isPlaying ? 'playing' : ''}`}
+                          onClick={() => handlePlaySyllableSound(syllable)}
+                          disabled={isPlaying}
+                          aria-label={`Play sound for syllable ${syllable.syllable}`}
+                          title={`Hear pronunciation of "${syllable.syllable}"`}
+                        >
+                          🔊
+                        </button>
+                      </div>
                       <div className="syllable-components">
                         {syllable.consonant} + {syllable.vowel}
                         {syllable.final && ` + ${syllable.final}`}
@@ -753,16 +846,29 @@ const WordBuilderSection = () => {
                 <h4>Available Syllables:</h4>
                 <div className="syllables-pool">
                   {builtSyllables.map((syllable, index) => (
-                    <div
-                      key={index}
-                      className={getSyllableButtonClass(syllable)}
-                      draggable={!userWord.some(userSyl => userSyl.syllable === syllable.syllable)}
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData('text/plain', syllable.syllable);
-                      }}
-                      onClick={() => handleSyllableDrop(syllable)}
-                    >
-                      <span className="syllable-display">{syllable.syllable}</span>
+                    <div key={index} className="syllable-container">
+                      <div
+                        className={getSyllableButtonClass(syllable)}
+                        draggable={!userWord.some(userSyl => userSyl.syllable === syllable.syllable)}
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', syllable.syllable);
+                        }}
+                        onClick={() => handleSyllableDrop(syllable)}
+                      >
+                        <span className="syllable-display">{syllable.syllable}</span>
+                      </div>
+                      <button
+                        className={`syllable-sound-btn ${isPlaying ? 'playing' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePlaySyllableSound(syllable);
+                        }}
+                        disabled={isPlaying}
+                        aria-label={`Play sound for syllable ${syllable.syllable}`}
+                        title={`Hear pronunciation of "${syllable.syllable}"`}
+                      >
+                        🔊
+                      </button>
                     </div>
                   ))}
                 </div>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { koreanAlphabet } from '../koreanAlphabetData';
 import { useProgress } from '../context/ProgressContext';
+import { playLetterSound, playPronunciationGuide, speakKorean, preloadVoices } from '../utils/audioUtils';
 
 // Pictogram mapping for visual learning
 const pictogramMap = {
@@ -98,6 +99,12 @@ const LearnSection = () => {
   const { isLetterUnlocked, getAvailableLetters, getLockedLettersCount } = useProgress();
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [filter, setFilter] = useState('available'); // 'all', 'available', 'locked', 'consonants', 'vowels'
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Preload voices when component mounts
+  useEffect(() => {
+    preloadVoices();
+  }, []);
 
   // Function to pronounce Korean words using Web Speech API
   const speakKorean = (text) => {
@@ -127,6 +134,33 @@ const LearnSection = () => {
       window.speechSynthesis.speak(utterance);
     } else {
       console.warn('Speech synthesis not supported in this browser');
+    }
+  };
+
+  // Audio playback handlers
+  const handlePlayLetterSound = async (letter) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    try {
+      await playLetterSound(letter);
+    } catch (error) {
+      console.error('Error playing letter sound:', error);
+    } finally {
+      setIsPlaying(false);
+    }
+  };
+
+  const handlePlayPronunciationGuide = async (letter) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    try {
+      await playPronunciationGuide(letter);
+    } catch (error) {
+      console.error('Error playing pronunciation guide:', error);
+    } finally {
+      setIsPlaying(false);
     }
   };
 
@@ -181,6 +215,18 @@ const LearnSection = () => {
           <>
             <div className="letter-sound">
               <span className="sound-text">/{letter.romanization}/</span>
+              <button
+                className={`sound-btn ${isPlaying ? 'playing' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlayLetterSound(letter);
+                }}
+                disabled={isPlaying}
+                aria-label={`Play sound for ${letter.name}`}
+                title={`Hear the pronunciation of ${letter.name}`}
+              >
+                🔊
+              </button>
             </div>
             <div className="letter-comparison">
               <span className="comparison-text">{letter.englishComparison}</span>
@@ -233,6 +279,15 @@ const LearnSection = () => {
         <div className="comparison-section">
           <h4>🔍 English Comparison</h4>
           <p>{letter.englishComparison}</p>
+          <button
+            className={`pronunciation-guide-btn ${isPlaying ? 'playing' : ''}`}
+            onClick={() => handlePlayPronunciationGuide(letter)}
+            disabled={isPlaying}
+            aria-label={`Play pronunciation guide for ${letter.name}`}
+            title={`Hear how ${letter.name} sounds in English`}
+          >
+            🔊 Hear Pronunciation Guide
+          </button>
         </div>
 
         <div className="visual-aid-section">

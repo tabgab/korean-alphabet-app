@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useProgress } from '../context/ProgressContext';
+import { playLetterSound, preloadVoices } from '../utils/audioUtils';
 
 // Exercise configuration with multiple question patterns
 const EXERCISE_TYPES = {
@@ -43,6 +44,12 @@ const PracticeSection = () => {
   const [showResult, setShowResult] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [score, setScore] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // Preload voices when component mounts
+  useEffect(() => {
+    preloadVoices();
+  }, []);
 
   // Generate focused questions about a specific letter with multiple variations
   const generateQuestion = useCallback((exerciseType, targetLetter = null) => {
@@ -229,6 +236,20 @@ const PracticeSection = () => {
     return baseClass;
   };
 
+  // Audio playback handler
+  const handlePlayLetterSound = async (letter) => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+    try {
+      await playLetterSound(letter);
+    } catch (error) {
+      console.error('Error playing letter sound:', error);
+    } finally {
+      setIsPlaying(false);
+    }
+  };
+
   if (!selectedExerciseType) {
     return (
       <div className="practice-section">
@@ -279,7 +300,18 @@ const PracticeSection = () => {
           ) : (
             currentQuestion.letter && (
               <div className="question-letter">
-                <span className="korean-letter-large">{currentQuestion.letter.koreanLetter}</span>
+                <div className="letter-with-sound">
+                  <span className="korean-letter-large">{currentQuestion.letter.koreanLetter}</span>
+                  <button
+                    className={`letter-sound-btn ${isPlaying ? 'playing' : ''}`}
+                    onClick={() => handlePlayLetterSound(currentQuestion.letter)}
+                    disabled={isPlaying}
+                    aria-label={`Play sound for ${currentQuestion.letter.name}`}
+                    title={`Hear pronunciation of ${currentQuestion.letter.name}`}
+                  >
+                    🔊
+                  </button>
+                </div>
                 <div className="letter-metadata">
                   <span className={`category-tag ${currentQuestion.letter.category}`}>
                     {currentQuestion.letter.category}
