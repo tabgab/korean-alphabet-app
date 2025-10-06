@@ -30,6 +30,13 @@ export const speakKorean = (text, options = {}) => {
     return Promise.reject(new Error('Speech synthesis not supported'));
   }
 
+  if (!text || text.trim() === '') {
+    console.warn('Empty text provided for speech synthesis');
+    return Promise.reject(new Error('Empty text'));
+  }
+
+  console.log('Attempting to speak Korean text:', text);
+
   // Cancel any ongoing speech
   window.speechSynthesis.cancel();
 
@@ -37,42 +44,125 @@ export const speakKorean = (text, options = {}) => {
     const utterance = new SpeechSynthesisUtterance(text);
     const koreanVoices = getKoreanVoices();
 
-    // Configure audio options
-    utterance.rate = options.rate || 0.8; // Slightly slower for clarity
+    // Configure audio options with enhanced settings for Korean
+    utterance.rate = options.rate || 0.7; // Slower for Korean characters
     utterance.pitch = options.pitch || 1;
-    utterance.volume = options.volume || 0.8;
+    utterance.volume = options.volume || 0.9;
 
     if (koreanVoices.length > 0) {
       utterance.voice = koreanVoices[0];
       utterance.lang = utterance.voice.lang;
+      console.log('Using Korean voice:', utterance.voice.name);
     } else {
       // Fallback to Korean locale
       utterance.lang = 'ko-KR';
+      console.log('No Korean voice found, using ko-KR locale');
     }
 
-    // Handle speech events
-    utterance.onend = () => resolve();
-    utterance.onerror = (error) => reject(error);
-    utterance.onstart = options.onStart || null;
+    // Enhanced error handling
+    utterance.onend = () => {
+      console.log('Speech synthesis completed successfully');
+      resolve();
+    };
+
+    utterance.onerror = (error) => {
+      console.error('Speech synthesis error:', error);
+      console.error('Error details:', {
+        text: text,
+        voice: utterance.voice?.name,
+        lang: utterance.lang,
+        rate: utterance.rate,
+        pitch: utterance.pitch,
+        volume: utterance.volume
+      });
+
+      // Try fallback with English voice if Korean fails
+      if (utterance.lang.startsWith('ko') && error.error !== 'canceled') {
+        console.log('Attempting fallback with English voice');
+        return fallbackToEnglish(text, options).then(resolve).catch(reject);
+      }
+
+      reject(error);
+    };
+
+    utterance.onstart = () => {
+      console.log('Speech synthesis started for:', text);
+      if (options.onStart) options.onStart();
+    };
 
     // Speak the text
     window.speechSynthesis.speak(utterance);
   });
 };
 
+// Fallback function to use English voice when Korean voice fails
+const fallbackToEnglish = (text, options) => {
+  return new Promise((resolve, reject) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Use English voice for fallback
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+      utterance.lang = englishVoice.lang;
+    } else {
+      utterance.lang = 'en-US';
+    }
+
+    utterance.rate = 0.8;
+    utterance.pitch = 1.1;
+
+    utterance.onend = () => resolve();
+    utterance.onerror = (error) => reject(error);
+
+    window.speechSynthesis.speak(utterance);
+  });
+};
+
 // Play individual letter sound
-export const playLetterSound = (letter) => {
+export const playLetterSound = async (letter) => {
   if (!letter || !letter.koreanLetter) {
     console.warn('Invalid letter provided for audio playback');
     return Promise.reject(new Error('Invalid letter'));
   }
 
+  console.log('Playing letter sound for:', letter.koreanLetter, 'Name:', letter.name);
+
   // For single letters, repeat them for clarity
   const textToSpeak = letter.koreanLetter.repeat(2);
-  return speakKorean(textToSpeak, {
-    rate: 0.6, // Slower for individual letters
-    onStart: () => console.log(`Playing sound for letter: ${letter.name}`)
-  });
+
+  try {
+    // Enhanced Korean character handling
+    await speakKorean(textToSpeak, {
+      rate: 0.5, // Even slower for individual letters
+      pitch: 1.2, // Slightly higher pitch for clarity
+      onStart: () => {
+        console.log(`Playing sound for letter: ${letter.name} (${letter.koreanLetter})`);
+      }
+    });
+  } catch (error) {
+    console.error(`Error playing letter ${letter.name}:`, error);
+
+    // Try fallback with romanization
+    if (letter.romanization) {
+      console.log(`Attempting fallback with romanization: ${letter.romanization}`);
+      try {
+        await speakKorean(letter.romanization, {
+          rate: 0.5,
+          onStart: () => {
+            console.log(`Playing romanization fallback for letter: ${letter.name} (${letter.romanization})`);
+          }
+        });
+      } catch (fallbackError) {
+        console.error(`Fallback also failed for letter ${letter.name}:`, fallbackError);
+        throw fallbackError;
+      }
+    } else {
+      throw error;
+    }
+  }
 };
 
 // Play syllable sound
@@ -174,6 +264,20 @@ export const preloadVoices = () => {
     // Force browser to load voices
     window.speechSynthesis.getVoices();
   }
+};
+
+// Debug function to test Korean character pronunciation
+export const testKoreanCharacter = (character) => {
+  console.log('Testing Korean character:', character);
+  console.log('Character code:', character.charCodeAt(0));
+  console.log('Character hex:', character.charCodeAt(0).toString(16));
+
+  // Try to speak the character
+  return speakKorean(character, {
+    rate: 0.3,
+    onStart: () => console.log('Started speaking character'),
+    onError: (error) => console.log('Error speaking character:', error)
+  });
 };
 
 // Audio playback with visual feedback

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useProgress } from '../context/ProgressContext';
-import { playLetterSound, preloadVoices } from '../utils/audioUtils';
+import { playLetterSound, preloadVoices, testKoreanCharacter } from '../utils/audioUtils';
 
 // Exercise configuration with multiple question patterns
 const EXERCISE_TYPES = {
@@ -45,11 +45,26 @@ const PracticeSection = () => {
   const [questionNumber, setQuestionNumber] = useState(1);
   const [score, setScore] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
 
   // Preload voices when component mounts
   useEffect(() => {
     preloadVoices();
   }, []);
+
+  // Debug function for testing Korean characters
+  const debugKoreanCharacter = async (character) => {
+    console.log('=== DEBUGGING KOREAN CHARACTER ===');
+    console.log('Character:', character);
+    console.log('Unicode code point:', character.charCodeAt(0).toString(16));
+
+    try {
+      await testKoreanCharacter(character);
+      console.log('✅ Successfully played character');
+    } catch (error) {
+      console.error('❌ Failed to play character:', error);
+    }
+  };
 
   // Generate focused questions about a specific letter with multiple variations
   const generateQuestion = useCallback((exerciseType, targetLetter = null) => {
@@ -242,9 +257,29 @@ const PracticeSection = () => {
 
     setIsPlaying(true);
     try {
+      console.log('Attempting to play sound for letter:', letter);
+      console.log('Letter Korean character:', letter?.koreanLetter, 'Unicode:', letter?.koreanLetter?.charCodeAt(0)?.toString(16));
+
       await playLetterSound(letter);
+      console.log('Successfully played sound for letter:', letter.name);
     } catch (error) {
-      console.error('Error playing letter sound:', error);
+      console.error('Error playing letter sound for', letter?.name, ':', error);
+      console.error('Letter data:', letter);
+
+      // Enhanced debugging for Korean characters
+      if (letter?.koreanLetter) {
+        console.log('Debugging Korean character:', letter.koreanLetter);
+        console.log('Character analysis:', {
+          character: letter.koreanLetter,
+          charCode: letter.koreanLetter.charCodeAt(0),
+          hexCode: letter.koreanLetter.charCodeAt(0).toString(16),
+          isInKoreanRange: letter.koreanLetter.charCodeAt(0) >= 0xAC00 && letter.koreanLetter.charCodeAt(0) <= 0xD7AF,
+          isJamo: letter.koreanLetter.charCodeAt(0) >= 0x1100 && letter.koreanLetter.charCodeAt(0) <= 0x11FF
+        });
+      }
+
+      // Try to show user-friendly error message or fallback
+      alert(`Unable to play sound for "${letter?.koreanLetter}" (${letter?.name}). This might be due to browser limitations with Korean character pronunciation. Try using a different browser or check if Korean language support is installed.`);
     } finally {
       setIsPlaying(false);
     }
@@ -256,6 +291,69 @@ const PracticeSection = () => {
         <div className="section-header">
           <h2>Practice Exercises</h2>
           <p>Choose an exercise type to test your Korean alphabet knowledge.</p>
+
+          {/* Debug panel for development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="debug-panel" style={{
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: '8px',
+              padding: '1rem',
+              marginBottom: '1rem'
+            }}>
+              <h4 style={{ color: '#856404', marginBottom: '0.5rem' }}>🔧 Debug Panel (Development Only)</h4>
+              <p style={{ color: '#856404', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                Test Korean character pronunciation:
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => debugKoreanCharacter('ㅑ')}
+                  style={{
+                    backgroundColor: '#ffc107',
+                    color: '#212529',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '0.25rem 0.5rem',
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Test ㅑ (ya)
+                </button>
+                <button
+                  onClick={() => debugKoreanCharacter('ㄱ')}
+                  style={{
+                    backgroundColor: '#ffc107',
+                    color: '#212529',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '0.25rem 0.5rem',
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Test ㄱ (g/k)
+                </button>
+                <button
+                  onClick={() => debugKoreanCharacter('ㅏ')}
+                  style={{
+                    backgroundColor: '#ffc107',
+                    color: '#212529',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '0.25rem 0.5rem',
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Test ㅏ (a)
+                </button>
+              </div>
+              <p style={{ color: '#856404', fontSize: '0.8rem', marginTop: '0.5rem' }}>
+                Check browser console for detailed debugging information.
+              </p>
+            </div>
+          )}
 
           <div className="exercise-types">
             {Object.entries(EXERCISE_TYPES).map(([type, config]) => (
