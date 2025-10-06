@@ -97,8 +97,7 @@ const WordBuilderSection = () => {
         } else if (selectedJamo.initial && selectedJamo.vowel && !selectedJamo.final) {
           if (targetSyllable.final) {
             // Check if we can reuse the same consonant for final position
-            const required = getRequiredJamo();
-            const availableConsonants = required.consonants.filter(c =>
+            const availableConsonants = requiredJamo.consonants.filter(c =>
               c.koreanLetter === targetSyllable.final ||
               c.koreanLetter === targetSyllable.consonant
             );
@@ -133,6 +132,8 @@ const WordBuilderSection = () => {
     return hints;
   }, [selectedWord, currentStage, selectedJamo, builtSyllables, userWord, getRequiredJamo]);
 
+  const requiredJamo = getRequiredJamo();
+  const stageHints = getHints();
 
   const showHintForCurrentStage = useCallback(() => {
     const hints = getHints();
@@ -474,7 +475,7 @@ const WordBuilderSection = () => {
               <div className="jamo-section">
                 <h4>Required Consonants:</h4>
                 <div className="jamo-grid">
-                  {getRequiredJamo().consonants.map(consonant => (
+                  {requiredJamo.consonants.map(consonant => (
                     <div
                       key={consonant.id}
                       className={getJamoButtonClass(consonant, 'consonant')}
@@ -491,7 +492,7 @@ const WordBuilderSection = () => {
               <div className="jamo-section">
                 <h4>Required Vowels:</h4>
                 <div className="jamo-grid">
-                  {getRequiredJamo().vowels.map(vowel => (
+                  {requiredJamo.vowels.map(vowel => (
                     <div
                       key={vowel.id}
                       className={getJamoButtonClass(vowel, 'vowel')}
@@ -510,7 +511,7 @@ const WordBuilderSection = () => {
               <button
                 className="hint-btn"
                 onClick={showHintForCurrentStage}
-                disabled={getHints().length === 0}
+                disabled={stageHints.length === 0}
               >
                 💡 Show Hint
               </button>
@@ -543,7 +544,7 @@ const WordBuilderSection = () => {
                 <h4>Available Letters:</h4>
                 <p>Select consonants and vowels to build the next syllable. You can reuse consonants for different positions.</p>
                 <div className="jamo-pool-grid">
-                  {getRequiredJamo().consonants.map(consonant => {
+                  {requiredJamo.consonants.map(consonant => {
                     const selectedCount = selectedJamo.consonants.filter(c => c.id === consonant.id).length;
                     const maxNeeded = 2; // Can be used as both initial and final
 
@@ -561,7 +562,7 @@ const WordBuilderSection = () => {
                       </button>
                     );
                   })}
-                  {getRequiredJamo().vowels.map(vowel => (
+                  {requiredJamo.vowels.map(vowel => (
                     <button
                       key={vowel.id}
                       className={getJamoButtonClass(vowel, 'vowel')}
